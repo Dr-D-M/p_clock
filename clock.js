@@ -19,104 +19,193 @@ const refresh = document.querySelector('#refresh');
 
 
 // variables 
-var isPaused = false;
+/*var isPaused = false;
 var time = new Date();
-var isPlayClicked = false;	
+var isPlayClicked = false;*/	
 
 // session display click events
 moreTimeSession.addEventListener("click", (e)=>{
 	e.preventDefault();
 	addTimeSession();
-	console.log(e.target);
+	
 });
 
 lessTimeSession.addEventListener("click", (e)=>{
 	substractTimeSession();
-	console.log(e.target);
+	
 });
 workButton.addEventListener('click', (e)=>{
-	updateCenterDisplay();
-	console.log(e.target);
+	setTimerWork();
+	
 });
 
 // break display click events
 moreBreakTime.addEventListener("click", (e)=>{
-addTimeBreak();
-	console.log(e.target);
+    addTimeBreak();
+	
 });
 lessBreakTime.addEventListener("click", (e)=>{
 	lessTimeBreak();
-	console.log(e.target);
+	
 });
 
 restButton.addEventListener('click', (e)=>{
-
-	console.log(e.target);
+	setTimerBreak() || timerBreak();
+	
+	
 });
 
 //main display events 
 play.addEventListener("click", (e) =>{
     e.preventDefault();
-    startTime();
-    console.log(e.target)
+    timer();
+    
 });
 
 pause.addEventListener("click", (e) =>{
     e.preventDefault();
-
-    console.log(e.target)
+    pauseTime();
+    
 });
 
 stop.addEventListener("click", (e) =>{
     e.preventDefault();
-
-    console.log(e.target)
+    stopTime();
 });
 
 refresh.addEventListener("click", (e) =>{
     e.preventDefault();
-
-    console.log(e.target)
+    refreshTime();
 });
 
-//set session timing functions
-var count = 0;
-function addTimeSession(){
+/*Make the clock work*/
+let countdown; 
+ 
+function timer(secondsCounter){
+	clearInterval(countdown);
+	secondsCounter = 1500;
+	const now = Date.now();
+	const then = now + secondsCounter * 1000;
+	//displayTime(secondsCounter);
 
-	Math.floor(count);
-	count += 60;
+countdown = setInterval(() => {
+	const secondsLeft = Math.round((then - Date.now()) / 1000);
 
-	sessionDisplay.innerText = count++;
+   displayTime(secondsLeft);
+	
+}, 1000);
 }
 
-function substractTimeSession(){
-	count -=60;
-	sessionDisplay.innerText = count;
+function timerBreak(secondsCounter){
+	clearInterval(countdown);
+    secondsCounter = 300;
+    const now = Date.now();
+    const then = now + secondsCounter * 1000;
+
+    countdown = setInterval(() =>{
+    	const secondsBehind = Math.round((then - Date.now()) / 1000);
+displayTimeBreak(secondsBehind);
+    }, 1000);
 }
-// set break timing functions
-function addTimeBreak(minutes, seconds){
-	count += 60;
 
 
-	breakDisplay.innerText = count++;
+function displayTimeBreak(secondsCounter){
+	const minutes = Math.floor(secondsCounter / 60);
+	const secondsBreak = secondsCounter % 60;
+	let screen = `${minutes}:${secondsBreak < 10 ? '0' : ''}${secondsBreak}`;
+     centerDisplay.textContent = screen;
+     document.title = screen;
+     centerDisplay.textContent = screen;
+
+     if(screen == '0:01'){
+		alert('Get To Work Bitch!!');
+	}else{
+		return;
+	}
+
 }
 
-function lessTimeBreak(){
-	count -= 60;
-	breakDisplay.innerText = count;
+function displayTime(secondsCounter){
+	
+	const minutes = Math.floor(secondsCounter / 60);
+	const remainingSeconds = secondsCounter % 60;
+	const display = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    centerDisplay.textContent = display;
+    
+    
+    document.title = display;
+
+    if(display == '0:01'){
+    	alert('This should be working, sweetie');
+    }
+    
+	//console.log({minutes, remainingSeconds});
 }
+
+
 
 // updatte the display when "work" or "rest" button are pressed
 
-function updateCenterDisplay(){
+function setTimerWork(){
+const seconds = parseInt(this.time);
+refreshTimeWork(seconds);
+}
+function setTimerBreak(){
+	const seconds = parseInt(this.time)
+	refreshTimeBreak(seconds);
 }
 
-// start clock function
 
-function startTime(){
-	console.log('start!');
+
+function pauseTime(){
+countdown = clearInterval(countdown);
+
+    if(pause){
+    	console.log('fuck!');
+    }
+	
 }
 
+function stopTime(secondsCounter) {
+   
+    countdown = clearInterval(countdown);
+	console.log('stopped');
+}
+function refreshTimeBreak(secondsCounter){
+	secondsCounter = 300;
 
+	let mins = Math.floor(secondsCounter / 60);
+	let secs = secondsCounter % 60;
+	let refresherDisplay = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+	centerDisplay.textContent = refresherDisplay;
+	console.log("take a break, man");
+
+}
+function refreshTimeWork(secondsCounter) {
+	secondsCounter = 1500;
+
+	let mins = Math.floor(secondsCounter / 60);
+	let secs = secondsCounter % 60;
+	let refresherDisplay = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+	centerDisplay.textContent = refresherDisplay;
+
+	
+	console.log('new time!');
+}
+
+function refreshTime(secondsCounter){
+	secondsCounter = 1500;
+
+	let mins = Math.floor(secondsCounter / 60);
+	let secs = secondsCounter % 60;
+	let refresherDisplay = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+	centerDisplay.textContent = refresherDisplay;
+
+	
+	console.log('refresh the clock');
+}
 
 
